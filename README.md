@@ -1,6 +1,6 @@
-# ⚡ Arfas Ali v3.3.5 — Stealth Technical Interview Assistant
+# ⚡ BuddieAI v3.3.5 — Stealth Technical Interview Assistant
 
-Arfas Ali is an ultra-fast, stealthy AI assistant engineered specifically for live technical interviews, DSA coding rounds, and system design evaluations. It operates discreetly on your screen, featuring real-time audio transcription, instant screen capture analysis, and deep resume context injection.
+BuddieAI is an ultra-fast, stealthy AI assistant engineered specifically for live technical interviews, DSA coding rounds, and system design evaluations. It operates discreetly on your screen, featuring real-time audio transcription, instant screen capture analysis, and deep resume context injection.
 
 ---
 
@@ -69,7 +69,7 @@ Use these keyboard shortcuts for 100% stealthy, hands-free operation during your
 
 ---
 
-## 🎯 How to Use Arfas Ali Features
+## 🎯 How to Use BuddieAI Features
 
 ### 1. 🎙️ AI Answer Mode (Live Audio Transcription)
 1. Click **`AI Answer`** on TopBar or toggle live mode.
@@ -80,7 +80,7 @@ Use these keyboard shortcuts for 100% stealthy, hands-free operation during your
 
 ### 2. 📸 Screen Analysis Mode
 1. Click **`Screen`** tab or press **`Ctrl + E`**.
-2. Arfas Ali captures your full screen, compresses it to 800px JPEG, and extracts code/DSA problems.
+2. BuddieAI captures your full screen, compresses it to 800px JPEG, and extracts code/DSA problems.
 3. Receives an ultra-fast, syntax-highlighted solution on a single clean page in **under 1 second**.
 
 ### 3. 💬 Chat Mode
@@ -116,4 +116,4 @@ npm run dist
 
 ---
 
-*Made with ❤️ by Arfas Ali Team — Empowering Candidates Worldwide.*
+*Made with ❤️ by BuddieAI Team — Empowering Candidates Worldwide.*

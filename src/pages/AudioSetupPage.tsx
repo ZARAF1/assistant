@@ -75,7 +75,7 @@ export const AudioSetupPage: React.FC = () => {
       const name = err instanceof DOMException ? err.name : "";
       const message =
         name === "NotAllowedError" || name === "PermissionDeniedError"
-          ? "Microphone access is blocked. Open Windows Settings → Privacy & security → Microphone, turn on \"Let apps access your microphone\", then restart Arfas Ali."
+          ? "Microphone access is blocked. Open Windows Settings → Privacy & security → Microphone, turn on \"Let apps access your microphone\", then restart BuddieAI."
           : name === "NotFoundError" || name === "DevicesNotFoundError"
             ? "No microphone was found. Plug in a mic/headset and check it's enabled in Windows Sound settings."
             : name === "NotReadableError" || name === "TrackStartError"
@@ -94,10 +94,10 @@ export const AudioSetupPage: React.FC = () => {
   const handleActivate = () => {
     stopStream();
     updateSettings({ micDeviceId: selectedMic });
-    window.ghostly.setOpacity(1);
-    window.ghostly.show();
-    window.ghostly.enableMouse();
-    sessionStorage.setItem("ghostly_autostart", "true");
+    window.BuddieAI.setOpacity(1);
+    window.BuddieAI.show();
+    window.BuddieAI.enableMouse();
+    sessionStorage.setItem("BuddieAI_autostart", "true");
     setAppScreen("interview");
   };
 
@@ -124,7 +124,7 @@ export const AudioSetupPage: React.FC = () => {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-[300px] flex flex-col gap-2.5 relative z-10"
         style={{ pointerEvents: "auto" }}
-        onMouseEnter={() => window.ghostly.enableMouse()}
+        onMouseEnter={() => window.BuddieAI.enableMouse()}
       >
         {/* ── Header ── */}
         <div className="flex items-center justify-between px-0.5">

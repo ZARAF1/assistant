@@ -261,7 +261,7 @@ useEffect(() => {
 
       setOllamaError("");
 
-      const models = await window.ghostly.ollamaListModels();
+      const models = await window.BuddieAI.ollamaListModels();
 
       setOllamaModels(models);
 
@@ -479,7 +479,7 @@ useEffect(() => {
 
         // the same Electron main-process proxy the real provider call uses.
 
-        const result = await window.ghostly.nvidiaTestKey(key);
+        const result = await window.BuddieAI.nvidiaTestKey(key);
 
         if (result.ok) {
 
@@ -535,7 +535,7 @@ useEffect(() => {
 
         // Electron main-process proxy the real provider uses.
 
-        const result = await window.ghostly.anthropicApiCall(key, {
+        const result = await window.BuddieAI.anthropicApiCall(key, {
 
           model: "claude-haiku-4-5-20251001",
 
@@ -653,7 +653,7 @@ useEffect(() => {
 
         "",    });
 
-    window.ghostly.saveSettings(useStore.getState().settings);
+    window.BuddieAI.saveSettings(useStore.getState().settings);
 
     setAppScreen("audio-setup");
 
@@ -671,7 +671,7 @@ const handleUseOllama = async () => {
 
   try {
 
-    await window.ghostly.ollamaUseModel(ollamaModel);
+    await window.BuddieAI.ollamaUseModel(ollamaModel);
 
     // ADDED: Only mark Ollama active after backend confirms success
 
@@ -733,7 +733,7 @@ const handleUseOllama = async () => {
 
         style={{ pointerEvents: "auto" }}
 
-        onMouseEnter={() => window.ghostly.enableMouse()}
+        onMouseEnter={() => window.BuddieAI.enableMouse()}
 
       >
 
@@ -984,7 +984,7 @@ const handleUseOllama = async () => {
 
                   <button
                     onClick={() =>
-                      window.ghostly.openExternal(
+                      window.BuddieAI.openExternal(
                         "https://console.deepgram.com/signup"
                       )
                     }
@@ -1218,7 +1218,7 @@ const handleUseOllama = async () => {
 
                         <button
 
-                          onClick={() => window.ghostly.openExternal(p.url)}
+                          onClick={() => window.BuddieAI.openExternal(p.url)}
 
                           className="text-[10px] font-bold transition-colors shrink-0 opacity-35 hover:opacity-80"
 

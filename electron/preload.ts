@@ -1,31 +1,31 @@
 import { contextBridge, ipcRenderer } from "electron";
 
-contextBridge.exposeInMainWorld("ghostly", {
+contextBridge.exposeInMainWorld("BuddieAI", {
   // Open URL in system browser (Chrome etc)
-  openExternal: (url: string): void => ipcRenderer.send("ghostly:open-external", url),
+  openExternal: (url: string): void => ipcRenderer.send("BuddieAI:open-external", url),
 
   // System Audio source fetcher
   getDesktopSources: (): Promise<{id: string, name: string}[]> =>
-    ipcRenderer.invoke("ghostly:get-desktop-sources"),
+    ipcRenderer.invoke("BuddieAI:get-desktop-sources"),
 
   // Mouse click-through control
-  enableMouse: (): void => ipcRenderer.send("ghostly:enable-mouse"),
-  disableMouse: (): void => ipcRenderer.send("ghostly:disable-mouse"),
+  enableMouse: (): void => ipcRenderer.send("BuddieAI:enable-mouse"),
+  disableMouse: (): void => ipcRenderer.send("BuddieAI:disable-mouse"),
 
   // Window control
-  hide: (): void => ipcRenderer.send("ghostly:hide"),
-  show: (): void => ipcRenderer.send("ghostly:show"),
-  quit: (): void => ipcRenderer.send("ghostly:quit"),
-  getVersion: (): string => ipcRenderer.sendSync("ghostly:get-version"),
+  hide: (): void => ipcRenderer.send("BuddieAI:hide"),
+  show: (): void => ipcRenderer.send("BuddieAI:show"),
+  quit: (): void => ipcRenderer.send("BuddieAI:quit"),
+  getVersion: (): string => ipcRenderer.sendSync("BuddieAI:get-version"),
   onShow: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:show", listener);
-    return () => ipcRenderer.removeListener("ghostly:show", listener);
+    ipcRenderer.on("BuddieAI:show", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:show", listener);
   },
 
   // Capture
   captureFullscreen: (): Promise<string> =>
-    ipcRenderer.invoke("ghostly:capture-fullscreen"),
+    ipcRenderer.invoke("BuddieAI:capture-fullscreen"),
 
   // Settings persistence
   getSettings: (): Promise<any> => ipcRenderer.invoke("get-settings"),
@@ -33,7 +33,7 @@ contextBridge.exposeInMainWorld("ghostly", {
     ipcRenderer.invoke("save-settings", settings),
 
   // Opacity control
-  setOpacity: (value: number): void => ipcRenderer.send("ghostly:set-opacity", value),
+  setOpacity: (value: number): void => ipcRenderer.send("BuddieAI:set-opacity", value),
 
   // History persistence
   getHistory: (): Promise<any[]> => ipcRenderer.invoke("get-history"),
@@ -53,91 +53,91 @@ contextBridge.exposeInMainWorld("ghostly", {
   saveAds: (ads: any[]): Promise<void> => ipcRenderer.invoke("save-ads", ads),
   onAuthToken: (cb: (data: { token: string; user: any }) => void): (() => void) => {
     const listener = (_: any, data: { token: string; user: any }): void => cb(data);
-    ipcRenderer.on("ghostly:auth-token", listener);
-    return () => ipcRenderer.removeListener("ghostly:auth-token", listener);
+    ipcRenderer.on("BuddieAI:auth-token", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:auth-token", listener);
   },
   getPendingAuthToken: (): Promise<{ token: string; user: any } | null> =>
-    ipcRenderer.invoke("ghostly:get-pending-auth-token"),
+    ipcRenderer.invoke("BuddieAI:get-pending-auth-token"),
 
   // Deep link callback (Google OAuth)
   onDeepLink: (cb: (url: string) => void): (() => void) => {
     const listener = (_: any, url: string): void => cb(url);
-    ipcRenderer.on("ghostly:deep-link", listener);
-    return () => ipcRenderer.removeListener("ghostly:deep-link", listener);
+    ipcRenderer.on("BuddieAI:deep-link", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:deep-link", listener);
   },
 
   // Events from main process (hotkeys)
   onScreenshot: (cb: (b64: string) => void): (() => void) => {
     const listener = (_: any, b64: string): void => cb(b64);
-    ipcRenderer.on("ghostly:screenshot", listener);
-    return () => ipcRenderer.removeListener("ghostly:screenshot", listener);
+    ipcRenderer.on("BuddieAI:screenshot", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:screenshot", listener);
   },
 
   onSolve: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:solve", listener);
-    return () => ipcRenderer.removeListener("ghostly:solve", listener);
+    ipcRenderer.on("BuddieAI:solve", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:solve", listener);
   },
 
   onStartOver: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:start-over", listener);
-    return () => ipcRenderer.removeListener("ghostly:start-over", listener);
+    ipcRenderer.on("BuddieAI:start-over", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:start-over", listener);
   },
 
   onNextQuestion: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:next-question", listener);
-    return () => ipcRenderer.removeListener("ghostly:next-question", listener);
+    ipcRenderer.on("BuddieAI:next-question", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:next-question", listener);
   },
 
   onManualSend: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:manual-send", listener);
-    return () => ipcRenderer.removeListener("ghostly:manual-send", listener);
+    ipcRenderer.on("BuddieAI:manual-send", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:manual-send", listener);
   },
 
   onPrevQuestion: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:prev-question", listener);
-    return () => ipcRenderer.removeListener("ghostly:prev-question", listener);
+    ipcRenderer.on("BuddieAI:prev-question", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:prev-question", listener);
   },
 
   onNextQuestionPage: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:next-question-page", listener);
-    return () => ipcRenderer.removeListener("ghostly:next-question-page", listener);
+    ipcRenderer.on("BuddieAI:next-question-page", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:next-question-page", listener);
   },
 
   // Auto updater
   onUpdateAvailable: (cb: (version: string) => void): (() => void) => {
     const listener = (_: any, version: string): void => cb(version);
-    ipcRenderer.on("ghostly:update-available", listener);
-    return () => ipcRenderer.removeListener("ghostly:update-available", listener);
+    ipcRenderer.on("BuddieAI:update-available", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:update-available", listener);
   },
   onUpdateProgress: (cb: (percent: number) => void): (() => void) => {
     const listener = (_: any, percent: number): void => cb(percent);
-    ipcRenderer.on("ghostly:update-progress", listener);
-    return () => ipcRenderer.removeListener("ghostly:update-progress", listener);
+    ipcRenderer.on("BuddieAI:update-progress", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:update-progress", listener);
   },
   onUpdateDownloaded: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:update-downloaded", listener);
-    return () => ipcRenderer.removeListener("ghostly:update-downloaded", listener);
+    ipcRenderer.on("BuddieAI:update-downloaded", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:update-downloaded", listener);
   },
   onUpdateNotAvailable: (cb: () => void): (() => void) => {
     const listener = (): void => cb();
-    ipcRenderer.on("ghostly:update-not-available", listener);
-    return () => ipcRenderer.removeListener("ghostly:update-not-available", listener);
+    ipcRenderer.on("BuddieAI:update-not-available", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:update-not-available", listener);
   },
   onUpdateError: (cb: (msg: string) => void): (() => void) => {
     const listener = (_: any, msg: string): void => cb(msg);
-    ipcRenderer.on("ghostly:update-error", listener);
-    return () => ipcRenderer.removeListener("ghostly:update-error", listener);
+    ipcRenderer.on("BuddieAI:update-error", listener);
+    return () => ipcRenderer.removeListener("BuddieAI:update-error", listener);
   },
-  downloadUpdate: (): void => ipcRenderer.send("ghostly:download-update"),
-  installUpdate: (): void => ipcRenderer.send("ghostly:install-update"),
-  checkForUpdates: (): void => ipcRenderer.send("ghostly:check-update"),
+  downloadUpdate: (): void => ipcRenderer.send("BuddieAI:download-update"),
+  installUpdate: (): void => ipcRenderer.send("BuddieAI:install-update"),
+  checkForUpdates: (): void => ipcRenderer.send("BuddieAI:check-update"),
 
   // NVIDIA API proxy
   nvidiaApiCall: (apiKey: string, body: any): Promise<{ ok: boolean; status: number; data: string }> =>
@@ -158,9 +158,9 @@ contextBridge.exposeInMainWorld("ghostly", {
     ipcRenderer.invoke("ollama:use-model", model),
 
   // Keyboard shortcuts
-  getShortcuts: (): Promise<Record<string, string>> => ipcRenderer.invoke("ghostly:get-shortcuts"),
+  getShortcuts: (): Promise<Record<string, string>> => ipcRenderer.invoke("BuddieAI:get-shortcuts"),
   updateShortcuts: (bindings: Record<string, string>): Promise<{ ok: boolean; failed: string[] }> =>
-    ipcRenderer.invoke("ghostly:update-shortcuts", bindings),
+    ipcRenderer.invoke("BuddieAI:update-shortcuts", bindings),
   resetShortcuts: (): Promise<{ ok: boolean; failed: string[] }> =>
-    ipcRenderer.invoke("ghostly:reset-shortcuts"),
+    ipcRenderer.invoke("BuddieAI:reset-shortcuts"),
 });

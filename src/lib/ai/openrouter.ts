@@ -55,8 +55,8 @@ export class OpenRouterProvider implements AIProvider {
       headers: {
         Authorization: `Bearer ${apiKey.trim()}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://ghostly.ai",
-        "X-Title": "Arfas Ali",
+        "HTTP-Referer": "https://BuddieAI.ai",
+        "X-Title": "BuddieAI",
       },
       body: JSON.stringify({
         model: safeModel,

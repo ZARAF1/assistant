@@ -11,15 +11,15 @@ import http from "http";
 
 const OLLAMA_URL = "http://127.0.0.1:11434";
 
-// Only models activated by Ghostly are tracked here.
+// Only models activated by BuddieAI are tracked here.
 let activeOllamaModel: string | null = null;
 
 // Prevent multiple shutdown cleanup operations.
 let ollamaShutdownInProgress = false;
 
 const store = new Store({
-  name: "ghostly-data",
-  encryptionKey: "ghostly-secure-key-v1",
+  name: "BuddieAI-data",
+  encryptionKey: "BuddieAI-secure-key-v1",
   defaults: {
     settings: {
       activeProvider: "gemini",
@@ -60,7 +60,7 @@ export function getStoredShortcuts(): ShortcutBindings {
 async function unloadOllamaModel(model: string): Promise<void> {
   if (!model) return;
 
-  console.log(`[Ollama] Unloading Ghostly model: ${model}`);
+  console.log(`[Ollama] Unloading BuddieAI model: ${model}`);
 
   return new Promise((resolve) => {
     const body = JSON.stringify({
@@ -121,10 +121,10 @@ async function unloadOllamaModel(model: string): Promise<void> {
 }
 
 /**
- * Stop the model currently owned by Ghostly.
+ * Stop the model currently owned by BuddieAI.
  *
  * This does NOT stop Ollama itself.
- * It only unloads the model Ghostly activated.
+ * It only unloads the model BuddieAI activated.
  */
 export async function stopActiveOllamaModel(): Promise<void> {
   if (ollamaShutdownInProgress) {
@@ -136,7 +136,7 @@ export async function stopActiveOllamaModel(): Promise<void> {
   const model = activeOllamaModel;
 
   if (!model) {
-    console.log("[Ollama] No Ghostly model is currently active.");
+    console.log("[Ollama] No BuddieAI model is currently active.");
     ollamaShutdownInProgress = false;
     return;
   }
@@ -150,9 +150,9 @@ export async function stopActiveOllamaModel(): Promise<void> {
 }
 
 /**
- * Activate one Ollama model for Ghostly.
+ * Activate one Ollama model for BuddieAI.
  *
- * If another model was previously activated by Ghostly,
+ * If another model was previously activated by BuddieAI,
  * it is unloaded first.
  */
 async function activateOllamaModel(model: string): Promise<void> {
@@ -165,7 +165,7 @@ async function activateOllamaModel(model: string): Promise<void> {
     return;
   }
 
-  // Stop the previous Ghostly model first.
+  // Stop the previous BuddieAI model first.
   if (activeOllamaModel) {
     const previousModel = activeOllamaModel;
 
@@ -178,7 +178,7 @@ async function activateOllamaModel(model: string): Promise<void> {
     await unloadOllamaModel(previousModel);
   }
 
-  console.log(`[Ollama] Loading Ghostly model: ${model}`);
+  console.log(`[Ollama] Loading BuddieAI model: ${model}`);
 
   return new Promise((resolve, reject) => {
     const body = JSON.stringify({
@@ -186,7 +186,7 @@ async function activateOllamaModel(model: string): Promise<void> {
       prompt: "",
       stream: false,
 
-      // Keep the selected Ghostly model loaded while Ghostly is running.
+      // Keep the selected BuddieAI model loaded while BuddieAI is running.
       keep_alive: -1,
     });
 
@@ -215,7 +215,7 @@ async function activateOllamaModel(model: string): Promise<void> {
             activeOllamaModel = model;
 
             console.log(
-              `[Ollama] ✅ Ghostly active model: ${model}`,
+              `[Ollama] ✅ BuddieAI active model: ${model}`,
             );
 
             resolve();
@@ -266,7 +266,7 @@ export function registerIpcHandlers(): void {
   });
 
   // Desktop sources
-  ipcMain.handle("ghostly:get-desktop-sources", async () => {
+  ipcMain.handle("BuddieAI:get-desktop-sources", async () => {
     try {
       const sources = await desktopCapturer.getSources({
         types: ["screen"],
@@ -288,7 +288,7 @@ export function registerIpcHandlers(): void {
   });
 
   // Full-screen capture
-  ipcMain.handle("ghostly:capture-fullscreen", async () => {
+  ipcMain.handle("BuddieAI:capture-fullscreen", async () => {
     try {
       return await captureFullScreen();
     } catch (error) {
@@ -317,12 +317,12 @@ export function registerIpcHandlers(): void {
 
   // Keyboard shortcuts
   ipcMain.handle(
-    "ghostly:get-shortcuts",
+    "BuddieAI:get-shortcuts",
     () => getStoredShortcuts(),
   );
 
   ipcMain.handle(
-    "ghostly:update-shortcuts",
+    "BuddieAI:update-shortcuts",
     (_event, bindings: ShortcutBindings) => {
       if (!bindings || typeof bindings !== "object") {
         return {
@@ -347,7 +347,7 @@ export function registerIpcHandlers(): void {
   );
 
   ipcMain.handle(
-    "ghostly:reset-shortcuts",
+    "BuddieAI:reset-shortcuts",
     () => {
       const result = updateHotkeys(DEFAULT_SHORTCUTS);
 
@@ -478,9 +478,9 @@ export function registerIpcHandlers(): void {
   );
 
   /**
-   * Activate a model selected in Ghostly.
+   * Activate a model selected in BuddieAI.
    *
-   * This unloads the previous Ghostly model first.
+   * This unloads the previous BuddieAI model first.
    */
   ipcMain.handle(
     "ollama:use-model",
@@ -495,7 +495,7 @@ export function registerIpcHandlers(): void {
   );
 
   /**
-   * Explicitly stop the currently active Ghostly Ollama model.
+   * Explicitly stop the currently active BuddieAI Ollama model.
    */
   ipcMain.handle(
     "ollama:stop-model",
@@ -509,7 +509,7 @@ export function registerIpcHandlers(): void {
   );
 
   /**
-   * Return the model currently owned by Ghostly.
+   * Return the model currently owned by BuddieAI.
    */
   ipcMain.handle(
     "ollama:get-active-model",

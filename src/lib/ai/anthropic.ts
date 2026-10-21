@@ -65,7 +65,7 @@ export class AnthropicProvider implements AIProvider {
       console.log("[Anthropic] Calling via Electron proxy");
       console.log("[Anthropic] Model:", model);
 
-      const result = await window.ghostly.anthropicApiCall(apiKey, body);
+      const result = await window.BuddieAI.anthropicApiCall(apiKey, body);
 
       console.log("[Anthropic] Response status:", result.status);
 

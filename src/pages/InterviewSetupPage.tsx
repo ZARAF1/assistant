@@ -113,7 +113,7 @@ export const InterviewSetupPage: React.FC = () => {
   const [activeTab, setActiveTab]     = useState<"session" | "profile">("session");
 
   React.useEffect(() => {
-    window.ghostly.getSavedProfile().then(saved => {
+    window.BuddieAI.getSavedProfile().then(saved => {
       if (saved) { setProfile(saved); setSavedProfile(saved); }
     }).catch(() => {});
   }, [setSavedProfile]);
@@ -128,13 +128,13 @@ export const InterviewSetupPage: React.FC = () => {
   const handleContinue = async () => {
     if (!isReady) return;
     updateSettings({ autoAI, customInstructions });
-    if (hasProfile) { setSavedProfile(profile); await window.ghostly.saveProfile(profile).catch(() => {}); }
+    if (hasProfile) { setSavedProfile(profile); await window.BuddieAI.saveProfile(profile).catch(() => {}); }
     setInterviewSession({
       companyName: companyName.trim(), position: position.trim(),
       language, description: customInstructions.trim(),
       profile: hasProfile ? profile : null,
     });
-    setTimeout(() => window.ghostly.saveSettings(useStore.getState().settings), 50);
+    setTimeout(() => window.BuddieAI.saveSettings(useStore.getState().settings), 50);
     setAppScreen("api-setup");
   };
 
@@ -157,7 +157,7 @@ export const InterviewSetupPage: React.FC = () => {
         transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-[315px] flex flex-col gap-2.5 relative z-10"
         style={{ pointerEvents: "auto" }}
-        onMouseEnter={() => window.ghostly.enableMouse()}
+        onMouseEnter={() => window.BuddieAI.enableMouse()}
       >
         {/* ── Header ── */}
         <div className="flex items-center justify-between px-0.5">

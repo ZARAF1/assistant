@@ -7,7 +7,7 @@ const config: Config = {
     extend: {
       colors: {
         accent: "#00FF88",
-        ghostly: {
+        BuddieAI: {
           50: "#f0f4ff",
           100: "#dbe4ff",
           200: "#bac8ff",

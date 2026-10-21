@@ -2,17 +2,17 @@
 
 ## Privacy & BYOK Architecture
 
-**Arfas Ali Desktop App** is built with a **100% Privacy-First, Bring Your Own Key (BYOK)** architecture:
+**BuddieAI Desktop App** is built with a **100% Privacy-First, Bring Your Own Key (BYOK)** architecture:
 
 1. **Local Key Storage**: Your AI provider API keys (Gemini, Groq, OpenAI, Anthropic, OpenRouter) and custom settings are stored strictly on your local machine via local storage / electron store.
 2. **Direct API Calls**: AI requests travel directly from your app to the official API endpoints over TLS/HTTPS.
-3. **Stealth Overlay Security**: On Windows, Arfas Ali uses native OS APIs (`WDA_EXCLUDEFROMCAPTURE`) to ensure the overlay window remains invisible to screen capturing applications (Zoom, Google Meet, Microsoft Teams, Discord).
+3. **Stealth Overlay Security**: On Windows, BuddieAI uses native OS APIs (`WDA_EXCLUDEFROMCAPTURE`) to ensure the overlay window remains invisible to screen capturing applications (Zoom, Google Meet, Microsoft Teams, Discord).
 
 ---
 
 ## Reporting a Vulnerability
 
-To report a security vulnerability or bug in Arfas Ali Desktop App:
+To report a security vulnerability or bug in BuddieAI Desktop App:
 
 📧 Email: **support.ghotlyai@gmail.com** or contact [@Maheshshelke05](https://github.com/Maheshshelke05) on GitHub.
 

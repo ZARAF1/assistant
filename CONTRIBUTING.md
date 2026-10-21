@@ -1,12 +1,12 @@
-# Contributing to Arfas Ali Desktop App ⚡
+# Contributing to BuddieAI Desktop App ⚡
 
-Thank you for your interest in contributing to **Arfas Ali Desktop App**! Arfas Ali is a 100% free and open-source stealth AI interview copilot for Windows designed to help students and software engineers ace technical interviews.
+Thank you for your interest in contributing to **BuddieAI Desktop App**! BuddieAI is a 100% free and open-source stealth AI interview copilot for Windows designed to help students and software engineers ace technical interviews.
 
 ---
 
 ## 🛠️ Project Architecture
 
-Arfas Ali Desktop App is an Electron app built with:
+BuddieAI Desktop App is an Electron app built with:
 
 - **Framework**: Electron 34 + React 18 + Vite 5 + TypeScript
 - **Styling**: TailwindCSS + Framer Motion
@@ -28,8 +28,8 @@ Arfas Ali Desktop App is an Electron app built with:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Maheshshelke05/ghostly-releases.git
-   cd ghostly-desktop-app
+   git clone https://github.com/Maheshshelke05/BuddieAI-releases.git
+   cd BuddieAI-desktop-app
    ```
 
 2. **Install dependencies:**

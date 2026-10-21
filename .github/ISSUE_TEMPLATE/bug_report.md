@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a report to help us improve Arfas Ali Desktop App
+about: Create a report to help us improve BuddieAI Desktop App
 title: '[BUG] '
 labels: 'bug'
 assignees: ''
@@ -11,7 +11,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
-1. Open Arfas Ali Desktop App
+1. Open BuddieAI Desktop App
 2. Click on '...'
 3. See error
 

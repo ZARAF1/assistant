@@ -478,7 +478,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
       setCurrentSolution("");
       clearScreenshots();
       setError(null);
-      const rawB64 = await window.ghostly.captureFullscreen();
+      const rawB64 = await window.BuddieAI.captureFullscreen();
       const compressedB64 = await compressScreenshot(rawB64, 800, 0.7);
       addScreenshot(compressedB64);
       const screenPrompt = buildPrompt(settings.interviewType, settings.language);
@@ -514,7 +514,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
           category: supportCategory,
           subject: supportSubject.trim(),
           message: supportMessage.trim(),
-          app_version: window.ghostly.getVersion(),
+          app_version: window.BuddieAI.getVersion(),
           page: activeTab,
           interview_type: settings.interviewType,
           language: settings.language,
@@ -665,10 +665,10 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
     };
     addToHistory(sessionEntry);
     try {
-      const h = await window.ghostly.getHistory();
+      const h = await window.BuddieAI.getHistory();
       // Deduplicate: remove any existing entry with same session start timestamp
       const filtered = h.filter((x: any) => x.timestamp !== sessionEntry.timestamp && x.id !== sessionEntry.id);
-      await window.ghostly.saveHistory([sessionEntry, ...filtered]);
+      await window.BuddieAI.saveHistory([sessionEntry, ...filtered]);
     } catch { /* best-effort */ }
     // Reset tracking for next session
     sessionStartRef.current = Date.now();
@@ -750,9 +750,9 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
 
   // Force show window, opacity 1, and enable mouse on mount when entering interview screen
   useEffect(() => {
-    window.ghostly.setOpacity(1);
-    window.ghostly.show();
-    window.ghostly.enableMouse();
+    window.BuddieAI.setOpacity(1);
+    window.BuddieAI.show();
+    window.BuddieAI.enableMouse();
   }, []);
 
   // Hotkeys — all of these arrive as IPC events from Electron's system-wide
@@ -767,23 +767,23 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
     // here. Compress to 800px/70% JPEG to match handleScreenAnalysis's payload
     // size (this used to be sent uncompressed for the hotkey path only, several
     // times larger than the button-triggered flow).
-    const offScreenshot = window.ghostly.onScreenshot(async (b64) => {
+    const offScreenshot = window.BuddieAI.onScreenshot(async (b64) => {
       const compressed = await compressScreenshot(b64, 800, 0.7);
       addScreenshot(compressed);
     });
     // Ctrl+Enter — solve whatever's already captured/transcribed. If it's a
     // screenshot-driven solve, use the same interview-type/language prompt
     // handleScreenAnalysis builds instead of an empty one.
-    const offSolve = window.ghostly.onSolve(async () => {
+    const offSolve = window.BuddieAI.onSolve(async () => {
       const followUp = screenshotsRef.current.length > 0
         ? buildPrompt(settings.interviewType, settings.language)
         : undefined;
       await runAIStream(screenshotsRef.current, undefined, followUp);
     });
-    const offStartOver = window.ghostly.onStartOver(handleRestart);
+    const offStartOver = window.BuddieAI.onStartOver(handleRestart);
 
     // Ctrl+N — Next Question (only meaningful while live-listening)
-    const offNextQuestion = window.ghostly.onNextQuestion(() => {
+    const offNextQuestion = window.BuddieAI.onNextQuestion(() => {
       if (!liveActive) return;
       if (currentSolution && pendingTranscript) {
         setQaPages(prev => [...prev, { question: pendingTranscript, answer: currentSolution }]);
@@ -796,20 +796,20 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
     });
 
     // Ctrl+0 — Manual Send (skip waiting for silence detection)
-    const offManualSend = window.ghostly.onManualSend(() => {
+    const offManualSend = window.BuddieAI.onManualSend(() => {
       if (liveActive && audio.liveText.trim() && !isStreaming) {
         handleManualSend();
       }
     });
 
     // Ctrl+8 — Previous Question page
-    const offPrevQuestion = window.ghostly.onPrevQuestion(() => {
+    const offPrevQuestion = window.BuddieAI.onPrevQuestion(() => {
       setUserNavigated(true);
       setPageIndex(p => Math.max(0, p - 1));
     });
 
     // Ctrl+2 — Next Question page
-    const offNextQuestionPage = window.ghostly.onNextQuestionPage(() => {
+    const offNextQuestionPage = window.BuddieAI.onNextQuestionPage(() => {
       setUserNavigated(true);
       setPageIndex(p => Math.min(Math.max(0, totalPages - 1), p + 1));
     });
@@ -844,7 +844,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
           showNext={liveActive && !isStreaming && !!currentSolution}
           activeTab={activeTab}
           onTabChange={handleTabChange}
-          onStop={() => { saveSessionToHistory(); handleRestart(); useStore.getState().setAppScreen("home"); setTimeout(() => window.ghostly.enableMouse(), 50); setTimeout(() => window.ghostly.enableMouse(), 300); }}
+          onStop={() => { saveSessionToHistory(); handleRestart(); useStore.getState().setAppScreen("home"); setTimeout(() => window.BuddieAI.enableMouse(), 50); setTimeout(() => window.BuddieAI.enableMouse(), 300); }}
           autoAI={autoAI}
           onToggleAutoAI={() => setAutoAI(v => !v)}
         />
@@ -867,7 +867,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
             <div
               className="flex-1 min-h-0 flex flex-col rounded-2xl overflow-hidden border border-white/[0.07] shadow-2xl"
               style={{ background: "rgba(16,16,18,0.94)", backdropFilter: "blur(28px)" }}
-              onMouseEnter={() => window.ghostly.enableMouse()}
+              onMouseEnter={() => window.BuddieAI.enableMouse()}
             >
               {/* ── Card Header ── */}
               <div className="flex items-center justify-between px-4 h-11 border-b border-white/[0.06] flex-shrink-0"
@@ -896,7 +896,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                         <span className="text-[9px] text-white/25 uppercase tracking-wider">Opacity</span>
                         <input type="range" min="20" max="100"
                           value={Math.round((settings.opacity ?? 1) * 100)}
-                          onChange={(e) => { const v = parseInt(e.target.value)/100; updateSettings({opacity:v}); window.ghostly.setOpacity(v); }}
+                          onChange={(e) => { const v = parseInt(e.target.value)/100; updateSettings({opacity:v}); window.BuddieAI.setOpacity(v); }}
                           className="w-14 h-1 accent-orange-400 cursor-pointer" />
                       </div>
                     </div>
@@ -938,7 +938,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                         onChange={(e) => {
                           const v = parseInt(e.target.value) / 100;
                           updateSettings({ opacity: v });
-                          window.ghostly.setOpacity(v);
+                          window.BuddieAI.setOpacity(v);
                         }}
                         className="w-14 h-1 accent-orange-400 cursor-pointer" />
                     </div>
@@ -975,7 +975,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                   <div className="flex flex-col items-center gap-5 py-2">
                     <div className="text-center">
                       <div className="text-3xl mb-1.5">💛</div>
-                      <p className="text-[15px] font-bold text-white/80 font-sans">Support Arfas Ali</p>
+                      <p className="text-[15px] font-bold text-white/80 font-sans">Support BuddieAI</p>
                       <p className="text-[12px] text-white/35 font-sans mt-1 leading-relaxed">
                         If this tool helped you crack an interview,<br />consider buying the developer a coffee! ☕
                       </p>
@@ -1025,7 +1025,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                     {chatMessages.length === 0 ? (
                       <div className="flex-1 flex flex-col items-center justify-center gap-3 text-center">
                         <div className="text-4xl">💬</div>
-                        <p className="text-[14px] font-semibold text-white/40 font-sans">Chat with Arfas Ali</p>
+                        <p className="text-[14px] font-semibold text-white/40 font-sans">Chat with BuddieAI</p>
                         <p className="text-[12px] text-white/20 font-sans">Ask anything — coding, interview prep, explanations...</p>
                       </div>
                     ) : (
@@ -1035,7 +1035,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                             <span className={`text-[9px] font-bold uppercase tracking-widest ${
                               msg.role === "user" ? "text-[#eb9245]/60" : "text-blue-400/60"
                             }`}>
-                              {msg.role === "user" ? "You" : "⚡ Arfas Ali"}
+                              {msg.role === "user" ? "You" : "⚡ BuddieAI"}
                             </span>
                             {msg.role === "user" ? (
                               <div className="max-w-[85%] bg-[#eb9245]/15 border border-[#eb9245]/20 rounded-2xl rounded-tr-sm px-4 py-2.5 text-[13px] text-white/85 font-sans leading-relaxed">
@@ -1067,7 +1067,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                       className="h-full flex flex-col items-center justify-center gap-4 text-center py-8">
                       <div className="text-5xl">👻</div>
                       <div>
-                        <p className="text-[15px] font-semibold text-white/50 font-sans mb-2">Arfas Ali is ready</p>
+                        <p className="text-[15px] font-semibold text-white/50 font-sans mb-2">BuddieAI is ready</p>
                         <p className="text-[12px] text-white/25 font-sans leading-relaxed">
                           Click <span className="text-[#eb9245] font-semibold">AI Answer</span> to start live transcription<br />
                           or <span className="text-white/40 font-semibold">Analyze Screen</span> to capture & solve
@@ -1125,7 +1125,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[10px] font-bold text-violet-400/80 uppercase tracking-widest">🤖 Arfas Ali Solution</span>
+                              <span className="text-[10px] font-bold text-violet-400/80 uppercase tracking-widest">🤖 BuddieAI Solution</span>
                               {isStreaming && (
                                 <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-pulse" />
                               )}
@@ -1173,7 +1173,7 @@ prompt = `${followUpQuery}\n\nAnswer naturally and provide enough detail to full
                     <input
                       type="text" value={chatInput}
                       onChange={(e) => setChatInput(e.target.value)}
-                      placeholder="Ask Arfas Ali anything..."
+                      placeholder="Ask BuddieAI anything..."
                       disabled={chatStreaming}
                       className="w-full bg-white/[0.05] border border-white/[0.07] hover:border-white/[0.14] focus:border-[#eb9245]/50 rounded-xl pl-4 pr-12 py-2.5 text-[13px] font-sans text-white/90 placeholder:text-white/25 focus:outline-none transition-colors disabled:opacity-40"
                     />

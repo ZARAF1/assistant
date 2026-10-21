@@ -55,10 +55,10 @@ function buildActionHandlers(win: BrowserWindow): Record<ShortcutAction, () => v
         win.focus();
         safeguardVisibility(win);
       }
-      win.webContents.send("ghostly:screenshot", base64);
-      setTimeout(() => win.webContents.send("ghostly:solve"), 100);
+      win.webContents.send("BuddieAI:screenshot", base64);
+      setTimeout(() => win.webContents.send("BuddieAI:solve"), 100);
     } catch (err) {
-      console.error("[Ghostly] Capture+Solve failed:", err);
+      console.error("[BuddieAI] Capture+Solve failed:", err);
       if (win.getOpacity() === 0) {
         win.setOpacity(1);
         win.setIgnoreMouseEvents(true, { forward: true });
@@ -77,7 +77,7 @@ function buildActionHandlers(win: BrowserWindow): Record<ShortcutAction, () => v
       win.setAlwaysOnTop(true, "screen-saver");
       win.setIgnoreMouseEvents(false);
       win.focus();
-      win.webContents.send("ghostly:show");
+      win.webContents.send("BuddieAI:show");
       safeguardVisibility(win);
     } else {
       win.setOpacity(0);
@@ -92,14 +92,14 @@ function buildActionHandlers(win: BrowserWindow): Record<ShortcutAction, () => v
       safeguardVisibility(win);
     }
     win.focus();
-    win.webContents.send("ghostly:solve");
+    win.webContents.send("BuddieAI:solve");
   };
 
   const startOver = () => {
-    win.webContents.send("ghostly:start-over");
+    win.webContents.send("BuddieAI:start-over");
     setTimeout(() => {
       win.setIgnoreMouseEvents(false);
-      win.webContents.send("ghostly:show");
+      win.webContents.send("BuddieAI:show");
     }, 200);
   };
 
@@ -108,10 +108,10 @@ function buildActionHandlers(win: BrowserWindow): Record<ShortcutAction, () => v
     solve,
     toggleVisibility,
     startOver,
-    nextQuestion: () => win.webContents.send("ghostly:next-question"),
-    manualSend: () => win.webContents.send("ghostly:manual-send"),
-    prevQuestion: () => win.webContents.send("ghostly:prev-question"),
-    nextQuestionPage: () => win.webContents.send("ghostly:next-question-page"),
+    nextQuestion: () => win.webContents.send("BuddieAI:next-question"),
+    manualSend: () => win.webContents.send("BuddieAI:manual-send"),
+    prevQuestion: () => win.webContents.send("BuddieAI:prev-question"),
+    nextQuestionPage: () => win.webContents.send("BuddieAI:next-question-page"),
   };
 }
 
@@ -154,13 +154,13 @@ export function registerHotkeys(win: BrowserWindow, bindings: ShortcutBindings =
 
   for (const [action, accelerator] of Object.entries(bindings) as [ShortcutAction, string][]) {
     const ok = globalShortcut.register(accelerator, handlers[action]);
-    console.log(`[Ghostly] ${accelerator} (${action}) registered:`, ok);
+    console.log(`[BuddieAI] ${accelerator} (${action}) registered:`, ok);
   }
 
   registerLegacyAliases(handlers);
   registerMoveKeys(win);
 
-  console.log("[Ghostly] All hotkeys registered");
+  console.log("[BuddieAI] All hotkeys registered");
 }
 
 // Called when the user remaps a shortcut in Settings — unregisters everything

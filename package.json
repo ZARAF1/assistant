@@ -1,9 +1,9 @@
 {
-  "name": "ghostly",
+  "name": "BuddieAI",
   "version": "3.4.0",
   "description": "Stealth AI coding assistant for technical interviews",
   "main": "./out/main/index.js",
-  "author": "Ghostly",
+  "author": "BuddieAI",
   "license": "MIT",
   "scripts": {
     "dev": "electron-vite dev",

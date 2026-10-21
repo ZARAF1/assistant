@@ -1,5 +1,5 @@
 /**
- * Image compressor utility for Arfas Ali.
+ * Image compressor utility for BuddieAI.
  * Downscales full-res screenshots to max 800px width @ 70% JPEG quality,
  * reducing payload sizes from ~4MB to ~40KB for 3x-5x faster AI Vision API calls.
  */

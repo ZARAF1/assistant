@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // actually gets sent when a downloaded update is ready to install. It used to
 // be missing from this union entirely, so TypeScript's own type error was
 // pointing at a real bug: the switch below had no case for it, so users saw a
-// generic "Arfas Ali — Ready" placeholder instead of an update-ready prompt.
+// generic "BuddieAI — Ready" placeholder instead of an update-ready prompt.
 interface UpdateAnimationProps {
   status: "idle" | "checking" | "available" | "downloading" | "installing" | "ready" | "complete" | "error";
   progress?: number;
@@ -108,7 +108,7 @@ export const UpdateAnimation: React.FC<UpdateAnimationProps> = ({ status, progre
       default:
         return {
           emoji: "⚡",
-          title: "Arfas Ali",
+          title: "BuddieAI",
           subtitle: "Ready",
           color: "#eb9245",
           glow: "rgba(235, 146, 69, 0.5)",
@@ -362,7 +362,7 @@ export const UpdateAnimation: React.FC<UpdateAnimationProps> = ({ status, progre
           )}
         </div>
 
-        {/* Bottom Ghostly Branding */}
+        {/* Bottom BuddieAI Branding */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -370,7 +370,7 @@ export const UpdateAnimation: React.FC<UpdateAnimationProps> = ({ status, progre
           className="absolute bottom-8 flex items-center gap-2"
         >
           <span className="text-2xl">👻</span>
-          <span className="text-sm font-bold text-white/40">Arfas Ali</span>
+          <span className="text-sm font-bold text-white/40">BuddieAI</span>
         </motion.div>
       </motion.div>
     </AnimatePresence>

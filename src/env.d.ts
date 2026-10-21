@@ -12,7 +12,7 @@ interface ImportMeta {
 }
 
 interface Window {
-  ghostly: {
+  BuddieAI: {
     openExternal: (url: string) => void;
     getDesktopSources: () => Promise<{ id: string; name: string }[]>;
     enableMouse: () => void;

@@ -97,7 +97,7 @@ export const InterviewHistoryModal: React.FC<Props> = ({ open, onClose }) => {
     setSelected(null);
     setExpandedQA(null);
     try {
-      window.ghostly.getHistory().then((h: InterviewRecord[]) => {
+      window.BuddieAI.getHistory().then((h: InterviewRecord[]) => {
         setRecords(Array.isArray(h) ? h.sort((a, b) => b.timestamp - a.timestamp) : []);
         setLoading(false);
       }).catch(() => setLoading(false));
@@ -105,13 +105,13 @@ export const InterviewHistoryModal: React.FC<Props> = ({ open, onClose }) => {
   }, [open]);
 
   const handleClearAll = async () => {
-    await window.ghostly.saveHistory([]).catch(() => {});
+    await window.BuddieAI.saveHistory([]).catch(() => {});
     setRecords([]); setSelected(null); setConfirmClear(false);
   };
 
   const handleDeleteOne = async (id: string) => {
     const next = records.filter(r => r.id !== id);
-    await window.ghostly.saveHistory(next).catch(() => {});
+    await window.BuddieAI.saveHistory(next).catch(() => {});
     setRecords(next);
     if (selected?.id === id) setSelected(null);
   };
@@ -152,7 +152,7 @@ export const InterviewHistoryModal: React.FC<Props> = ({ open, onClose }) => {
                 pointerEvents: "auto",
                 transition: "max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
               }}
-              onMouseEnter={() => window.ghostly.enableMouse()}
+              onMouseEnter={() => window.BuddieAI.enableMouse()}
             >
               {/* Violet accent top bar */}
               <div className="h-0.5 w-full shrink-0" style={{ background: "linear-gradient(90deg, transparent, rgba(139,92,246,0.8), rgba(99,102,241,0.6), transparent)" }} />
@@ -536,7 +536,7 @@ const DetailView: React.FC<{
                           }}
                         >
                           <div className="flex items-center justify-between mb-2.5">
-                            <p className="text-[8.5px] font-black uppercase tracking-widest" style={{ color: "rgba(167,139,250,0.7)" }}>🤖 Arfa Ali Answers</p>
+                            <p className="text-[8.5px] font-black uppercase tracking-widest" style={{ color: "rgba(167,139,250,0.7)" }}>🤖 BuddieAI Answers</p>
                             <button
                               onClick={() => copyText(qa.answer, i)}
                               className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[9.5px] font-bold transition-all"

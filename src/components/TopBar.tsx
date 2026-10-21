@@ -96,7 +96,7 @@ export const TopBar: React.FC<TopBarProps> = ({
       <div
         className="w-full max-w-[960px] flex flex-col pointer-events-auto"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
-        onMouseEnter={() => window.ghostly.enableMouse()}
+        onMouseEnter={() => window.BuddieAI.enableMouse()}
       >
         {/* ── Main Bar ── */}
         <div
@@ -123,7 +123,7 @@ export const TopBar: React.FC<TopBarProps> = ({
               className="text-[12px] font-black tracking-tight whitespace-nowrap"
               style={{ color: "rgba(255,255,255,0.92)", letterSpacing: "-0.3px" }}
             >
-              Arfas Ali
+              BuddieAI
             </span>
           </div>
 
@@ -300,10 +300,10 @@ export const TopBar: React.FC<TopBarProps> = ({
 
           {/* ── Close ── */}
           <button
-            onClick={() => window.ghostly.quit()}
+            onClick={() => window.BuddieAI.quit()}
             className="w-8 h-8 flex items-center justify-center rounded-[9px] transition-all duration-200 shrink-0"
             style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.07)", color: "rgba(255,255,255,0.3)" }}
-            onMouseEnter={e => { window.ghostly.enableMouse(); e.currentTarget.style.background = "rgba(239,68,68,0.18)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.4)"; e.currentTarget.style.color = "#f87171"; e.currentTarget.style.boxShadow = "0 0 10px rgba(239,68,68,0.2)"; }}
+            onMouseEnter={e => { window.BuddieAI.enableMouse(); e.currentTarget.style.background = "rgba(239,68,68,0.18)"; e.currentTarget.style.borderColor = "rgba(239,68,68,0.4)"; e.currentTarget.style.color = "#f87171"; e.currentTarget.style.boxShadow = "0 0 10px rgba(239,68,68,0.2)"; }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.04)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.07)"; e.currentTarget.style.color = "rgba(255,255,255,0.3)"; e.currentTarget.style.boxShadow = "none"; }}
           >
             <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">

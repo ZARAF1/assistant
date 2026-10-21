@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 export const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete }) => {
   const [progress, setProgress] = useState(0);
   const [phase, setPhase] = useState<"loading" | "ready">("loading");
-  const version = typeof window !== "undefined" && (window as any).ghostly?.getVersion?.()
-    ? (window as any).ghostly.getVersion()
+  const version = typeof window !== "undefined" && (window as any).BuddieAI?.getVersion?.()
+    ? (window as any).BuddieAI.getVersion()
     : "3.3.5";
 
   useEffect(() => {
@@ -159,7 +159,7 @@ export const SplashScreen: React.FC<{ onComplete: () => void }> = ({ onComplete 
                   backgroundClip: "text",
                 }}
               >
-                Arfa Ali
+                BuddieAI
               </h1>
               <p className="text-base font-medium" style={{ color: "rgba(255,255,255,0.38)" }}>
                 Stealth AI Copilot for Interviews

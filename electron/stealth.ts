@@ -1,5 +1,5 @@
 /**
- * Native Win32 stealth utilities for Ghostly.
+ * Native Win32 stealth utilities for BuddieAI.
  *
  * Uses SetWindowDisplayAffinity (user32.dll) to apply the strongest
  * capture-exclusion flag available on the current Windows version.
@@ -41,7 +41,7 @@ function getSetWindowDisplayAffinity():
     koffiAvailable = true;
     return cachedSetWindowDisplayAffinity;
   } catch (err) {
-    console.warn("[Ghostly Stealth] koffi not available:", err);
+    console.warn("[BuddieAI Stealth] koffi not available:", err);
     koffiAvailable = false;
     return null;
   }
@@ -125,7 +125,7 @@ export function applyStealthMode(win: BrowserWindow): void {
     if (success) {
       appliedHWnds.add(hwnd);
       console.log(
-        "[Ghostly Stealth] ✅ WDA_EXCLUDEFROMCAPTURE applied — fully invisible to capture",
+        "[BuddieAI Stealth] ✅ WDA_EXCLUDEFROMCAPTURE applied — fully invisible to capture",
       );
       setTimeout(() => nudgeRepaint(win), 50);
       return;
@@ -136,17 +136,17 @@ export function applyStealthMode(win: BrowserWindow): void {
     if (success) {
       appliedHWnds.add(hwnd);
       console.log(
-        "[Ghostly Stealth] ⚠️ WDA_MONITOR applied — standard stealth",
+        "[BuddieAI Stealth] ⚠️ WDA_MONITOR applied — standard stealth",
       );
       setTimeout(() => nudgeRepaint(win), 50);
       return;
     }
 
     console.warn(
-      "[Ghostly Stealth] ❌ SetWindowDisplayAffinity failed, relying on Electron fallback",
+      "[BuddieAI Stealth] ❌ SetWindowDisplayAffinity failed, relying on Electron fallback",
     );
   } catch (err) {
-    console.warn("[Ghostly Stealth] FFI call error:", err);
+    console.warn("[BuddieAI Stealth] FFI call error:", err);
   }
 }
 

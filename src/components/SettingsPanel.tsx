@@ -62,7 +62,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   const [shortcutError, setShortcutError] = useState<string | null>(null);
 
   useEffect(() => {
-    window.ghostly.getShortcuts().then(setShortcuts);
+    window.BuddieAI.getShortcuts().then(setShortcuts);
   }, []);
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
       }
       setShortcutError(null);
       const next = { ...shortcuts, [action]: accelerator };
-      window.ghostly.updateShortcuts(next).then((result) => {
+      window.BuddieAI.updateShortcuts(next).then((result) => {
         if (result.ok) {
           setShortcuts(next);
         } else {
@@ -96,7 +96,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
   }, [recordingAction, shortcuts]);
 
   const handleResetShortcuts = () => {
-    window.ghostly.resetShortcuts().then(() => window.ghostly.getShortcuts().then(setShortcuts));
+    window.BuddieAI.resetShortcuts().then(() => window.BuddieAI.getShortcuts().then(setShortcuts));
   };
   const [localKeys, setLocalKeys] = useState<Record<string, string>>(() => {
     const k: Record<string, string> = { deepgram: settings.deepgramApiKey || "" };
@@ -111,17 +111,17 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
     } else {
       setApiKey(id, value.trim());
     }
-    setTimeout(() => window.ghostly.saveSettings(useStore.getState().settings), 200);
+    setTimeout(() => window.BuddieAI.saveSettings(useStore.getState().settings), 200);
   };
 
   useEffect(() => {
-    window.ghostly.enableMouse();
-    const iv = setInterval(() => window.ghostly.enableMouse(), 200);
-    return () => { clearInterval(iv); window.ghostly.enableMouse(); };
+    window.BuddieAI.enableMouse();
+    const iv = setInterval(() => window.BuddieAI.enableMouse(), 200);
+    return () => { clearInterval(iv); window.BuddieAI.enableMouse(); };
   }, []);
 
   useEffect(() => {
-    const t = setTimeout(() => window.ghostly.saveSettings(settings), 500);
+    const t = setTimeout(() => window.BuddieAI.saveSettings(settings), 500);
     return () => clearTimeout(t);
   }, [settings]);
 
@@ -187,7 +187,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               onChange={(e) => {
                 const v = parseInt(e.target.value) / 100;
                 updateSettings({ opacity: v });
-                window.ghostly.setOpacity(v);
+                window.BuddieAI.setOpacity(v);
               }}
               className="w-full h-1.5 rounded-full appearance-none cursor-pointer"
               style={{ accentColor: "#8b5cf6" }}
@@ -270,7 +270,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
                   <span className="text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.5)" }}>🎙️ Deepgram</span>
-                  <button onClick={() => window.ghostly.openExternal("https://console.deepgram.com/signup")}
+                  <button onClick={() => window.BuddieAI.openExternal("https://console.deepgram.com/signup")}
                     className="text-[9px] font-bold transition-colors" style={{ color: "rgba(139,92,246,0.7)" }}
                     onMouseEnter={e => { e.currentTarget.style.color = "#a78bfa"; }}
                     onMouseLeave={e => { e.currentTarget.style.color = "rgba(139,92,246,0.7)"; }}>
@@ -299,7 +299,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                 <div key={p.id} className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-semibold" style={{ color: "rgba(255,255,255,0.5)" }}>{p.label}</span>
-                    <button onClick={() => window.ghostly.openExternal(p.url)}
+                    <button onClick={() => window.BuddieAI.openExternal(p.url)}
                       className="text-[9px] font-bold transition-colors" style={{ color: "rgba(139,92,246,0.7)" }}
                       onMouseEnter={e => { e.currentTarget.style.color = "#a78bfa"; }}
                       onMouseLeave={e => { e.currentTarget.style.color = "rgba(139,92,246,0.7)"; }}>
@@ -345,7 +345,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ onClose }) => {
                       key={m.id}
                       onClick={() => {
                         updateSettings({ activeProvider: "openrouter", activeModel: m.id });
-                        setTimeout(() => window.ghostly.saveSettings(useStore.getState().settings), 200);
+                        setTimeout(() => window.BuddieAI.saveSettings(useStore.getState().settings), 200);
                       }}
                       className="flex items-center justify-between px-3 py-2.5 rounded-[11px] text-left transition-all"
                       style={{

@@ -1,5 +1,5 @@
 #!/bin/bash
-# Arfas Ali — One command publish script
+# BuddieAI — One command publish script
 # Usage: bash publish.sh YOUR_GITHUB_TOKEN
 
 TOKEN=$1
@@ -11,7 +11,7 @@ fi
 
 # Get version from package.json
 VERSION=$(node -e "console.log(require('./package.json').version)")
-echo "🚀 Publishing Arfas Ali v$VERSION..."
+echo "🚀 Publishing BuddieAI v$VERSION..."
 
 # Step 1: Build + Upload to GitHub
 export GH_TOKEN=$TOKEN
@@ -25,7 +25,7 @@ fi
 echo "✅ Build done! Publishing release..."
 
 # Step 2: Find the draft release and publish it
-RELEASE=$(curl -s "https://api.github.com/repos/Maheshshelke05/ghostly-releases/releases" \
+RELEASE=$(curl -s "https://api.github.com/repos/Maheshshelke05/BuddieAI-releases/releases" \
   -H "Authorization: token $TOKEN" | \
   node -e "
     let d='';
@@ -43,11 +43,11 @@ if [ -z "$RELEASE" ]; then
 fi
 
 # Step 3: Publish the release (draft: false)
-curl -s -X PATCH "https://api.github.com/repos/Maheshshelke05/ghostly-releases/releases/$RELEASE" \
+curl -s -X PATCH "https://api.github.com/repos/Maheshshelke05/BuddieAI-releases/releases/$RELEASE" \
   -H "Authorization: token $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"draft":false}' > /dev/null
 
 echo ""
-echo "✅ Arfas Ali v$VERSION published successfully!"
+echo "✅ BuddieAI v$VERSION published successfully!"
 echo "👻 Users will see the update in their app automatically!"

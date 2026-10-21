@@ -36,7 +36,7 @@ export const HomePage: React.FC = () => {
   const [startStatus, setStartStatus] = useState<"idle" | "syncing">("idle");
   const [historyOpen, setHistoryOpen] = useState(false);
   const [historyCount, setHistoryCount] = useState(0);
-  const version = window.ghostly.getVersion();
+  const version = window.BuddieAI.getVersion();
 
   const activeAd = ads.find((a) => a.is_active) || null;
   const [gateAd, setGateAd] = useState<Ad | null>(null);
@@ -65,7 +65,7 @@ export const HomePage: React.FC = () => {
   const getCachedAds = async () => {
     const stateAds = useStore.getState().ads;
     if (stateAds.length > 0) return stateAds;
-    const savedAds = await window.ghostly.getAds().catch(() => []);
+    const savedAds = await window.BuddieAI.getAds().catch(() => []);
     return Array.isArray(savedAds) ? savedAds : [];
   };
 
@@ -76,13 +76,13 @@ export const HomePage: React.FC = () => {
         headers: { Authorization: `Bearer ${user.idToken}` },
       });
       if (res.status === 401 || res.status === 403) {
-        await window.ghostly.logoutUser(); setUser(null); setAds([]); setAppScreen("login");
+        await window.BuddieAI.logoutUser(); setUser(null); setAds([]); setAppScreen("login");
         throw new Error(res.status === 403 ? "Your account has been blocked. Contact support." : "Please login again.");
       }
       if (!res.ok) return { latestAds: await getCachedAds() };
       const data = await res.json();
       const latestAds = Array.isArray(data.ads) ? data.ads : await getCachedAds();
-      setAds(latestAds); await window.ghostly.saveAds(latestAds);
+      setAds(latestAds); await window.BuddieAI.saveAds(latestAds);
       return { latestAds };
     } catch (error: any) {
       if (error?.message?.includes("login") || error?.message?.includes("blocked")) throw error;
@@ -95,25 +95,25 @@ export const HomePage: React.FC = () => {
 };
 
   const handleContinueAfterAd = () => { setAdGate(false); setGateAd(null); setAppScreen("interview-setup"); };
-  const handleAdClick = () => { if (displayAd?.cta_url) window.ghostly.openExternal(displayAd.cta_url); setAdClicked(true); };
+  const handleAdClick = () => { if (displayAd?.cta_url) window.BuddieAI.openExternal(displayAd.cta_url); setAdClicked(true); };
 
   useEffect(() => {
-    window.ghostly.getHistory().then((h: any[]) => setHistoryCount(Array.isArray(h) ? h.length : 0)).catch(() => {});
+    window.BuddieAI.getHistory().then((h: any[]) => setHistoryCount(Array.isArray(h) ? h.length : 0)).catch(() => {});
   }, []);
   useEffect(() => {
-    if (!historyOpen) window.ghostly.getHistory().then((h: any[]) => setHistoryCount(Array.isArray(h) ? h.length : 0)).catch(() => {});
+    if (!historyOpen) window.BuddieAI.getHistory().then((h: any[]) => setHistoryCount(Array.isArray(h) ? h.length : 0)).catch(() => {});
   }, [historyOpen]);
 
   useEffect(() => {
-    window.ghostly.enableMouse();
+    window.BuddieAI.enableMouse();
   }, [historyOpen]);
 
   const handleCheckUpdate = () => {
     setCheckStatus("checking");
-    window.ghostly.checkForUpdates();
+    window.BuddieAI.checkForUpdates();
     setTimeout(() => setCheckStatus((s) => (s === "checking" ? "latest" : s)), 8000);
   };
-  const handleLogout = async () => { await window.ghostly.logoutUser(); setUser(null); setAds([]); setAppScreen("login"); };
+  const handleLogout = async () => { await window.BuddieAI.logoutUser(); setUser(null); setAds([]); setAppScreen("login"); };
 
   return (
     <div
@@ -134,7 +134,7 @@ export const HomePage: React.FC = () => {
         transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-[310px] flex flex-col gap-2 relative z-10"
         style={{ pointerEvents: "auto" }}
-        onMouseEnter={() => window.ghostly.enableMouse()}
+        onMouseEnter={() => window.BuddieAI.enableMouse()}
       >
         {/* ── Header ── */}
         <div className="flex items-center justify-between px-0.5">
@@ -162,7 +162,7 @@ export const HomePage: React.FC = () => {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-[16px] font-black tracking-tight text-white leading-none">Arfas Ali</h1>
+                <h1 className="text-[16px] font-black tracking-tight text-white leading-none">BuddieAI</h1>
                 <span
                   className="px-1.5 py-0.5 rounded-full text-[8px] font-black"
                   style={{ background: "rgba(139,92,246,0.15)", border: "1px solid rgba(139,92,246,0.3)", color: "#a78bfa" }}
@@ -177,7 +177,7 @@ export const HomePage: React.FC = () => {
           </div>
           {/* Quit */}
           <button
-            onClick={() => window.ghostly.quit()}
+            onClick={() => window.BuddieAI.quit()}
             className="w-7 h-7 flex items-center justify-center rounded-[9px] transition-all shrink-0"
             style={{
               background: "rgba(255,255,255,0.04)",
@@ -185,7 +185,7 @@ export const HomePage: React.FC = () => {
               color: "rgba(255,255,255,0.3)",
             }}
             onMouseEnter={e => {
-              window.ghostly.enableMouse();
+              window.BuddieAI.enableMouse();
               e.currentTarget.style.background = "rgba(239,68,68,0.15)";
               e.currentTarget.style.borderColor = "rgba(239,68,68,0.35)";
               e.currentTarget.style.color = "#f87171";
@@ -448,7 +448,7 @@ Stealth AI Copilot                </p>
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[9999] flex items-center justify-center"
             style={{ background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)", pointerEvents: "auto" }}
-            onMouseEnter={() => window.ghostly.enableMouse()}
+            onMouseEnter={() => window.BuddieAI.enableMouse()}
           >
             <motion.div
               initial={{ scale: 0.92, y: 20, opacity: 0 }} animate={{ scale: 1, y: 0, opacity: 1 }}

@@ -70,7 +70,7 @@ export class OllamaProvider implements AIProvider {
           model,
           messages: apiMessages,
 
-          // Stream the answer to Ghostly.
+          // Stream the answer to BuddieAI.
           stream: true,
 
           // Disable Qwen3-style thinking.
@@ -83,7 +83,7 @@ export class OllamaProvider implements AIProvider {
            *
            * The Electron main process is responsible
            * for keeping the selected model loaded and
-           * unloading it when Ghostly closes.
+           * unloading it when BuddieAI closes.
            *
            * The model was already activated through:
            *

@@ -20,7 +20,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
   }
 
   componentDidCatch(error: Error, info: React.ErrorInfo) {
-    console.error("[Ghostly] Renderer crashed:", error, info.componentStack);
+    console.error("[BuddieAI] Renderer crashed:", error, info.componentStack);
   }
 
   render() {
@@ -34,7 +34,7 @@ export class ErrorBoundary extends React.Component<Props, State> {
             className="max-w-md w-full rounded-2xl p-5 flex flex-col gap-3"
             style={{ background: "rgba(20,10,10,0.9)", border: "1px solid rgba(248,113,113,0.35)" }}
           >
-            <p className="text-[13px] font-black text-red-400">⚠ Ghostly hit an error</p>
+            <p className="text-[13px] font-black text-red-400">⚠ BuddieAI hit an error</p>
             <p className="text-[11px] font-mono text-white/70 break-words">
               {this.state.error.message}
             </p>

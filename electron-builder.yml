@@ -1,12 +1,12 @@
-appId: com.ghostly.app
-productName: Ghostly
+appId: com.BuddieAI.app
+productName: BuddieAI
 directories:
   buildResources: build
   output: dist
 publish:
   provider: github
   owner: Maheshshelke05
-  repo: ghostly-releases
+  repo: BuddieAI-releases
   releaseType: release
 files:
   - "out/**"
@@ -18,15 +18,15 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: Ghostly
+  executableName: BuddieAI
   target:
     - target: nsis
       arch:
         - x64
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
-  shortcutName: Ghostly
-  uninstallDisplayName: Ghostly
+  shortcutName: BuddieAI
+  uninstallDisplayName: BuddieAI
   createDesktopShortcut: always
 mac:
   entitlementsInherit: build/entitlements.mac.plist
@@ -48,7 +48,7 @@ linux:
     - target: AppImage
       arch:
         - x64
-  maintainer: ghostly
+  maintainer: BuddieAI
   category: Utility
 appImage:
   artifactName: ${name}-${version}.${ext}

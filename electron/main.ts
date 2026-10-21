@@ -71,7 +71,7 @@ async function waitForWhisper(
 }
 
 async function startLocalWhisper(): Promise<void> {
-  // If Ghostly already owns the Whisper process, do nothing.
+  // If BuddieAI already owns the Whisper process, do nothing.
   if (whisperProcess && !whisperProcess.killed) {
     console.log("[Ali] Local Whisper process is already running.");
     return;
@@ -79,7 +79,7 @@ async function startLocalWhisper(): Promise<void> {
 
   // IMPORTANT:
   // If Whisper is already running externally, reuse it.
-  // This prevents Ghostly from starting a second server on port 8765.
+  // This prevents BuddieAI from starting a second server on port 8765.
   if (await isPortOpen(WHISPER_HOST, WHISPER_PORT)) {
     console.log(
       `[Ali] Local Whisper is already running at http://${WHISPER_HOST}:${WHISPER_PORT}`,
@@ -266,7 +266,7 @@ function startAuthServer() {
         try {
           const { token, user } = JSON.parse(body);
           pendingAuthToken = { token, user };
-          mainWindow?.webContents.send("ghostly:auth-token", { token, user });
+          mainWindow?.webContents.send("BuddieAI:auth-token", { token, user });
           res.writeHead(200, { "Content-Type": "application/json" });
           res.end(JSON.stringify({ ok: true }));
         } catch {
@@ -284,7 +284,7 @@ function handleDeepLink(url: string) {
   if (!mainWindow) return;
   if (mainWindow.isMinimized()) mainWindow.restore();
   mainWindow.focus();
-  mainWindow.webContents.send("ghostly:deep-link", url);
+  mainWindow.webContents.send("BuddieAI:deep-link", url);
 }
 
 function enforceStealthOnWindow(win: BrowserWindow): void {
@@ -333,17 +333,17 @@ function createMainWindow(): BrowserWindow {
   // one that's simply "not visible", with no way to tell the difference otherwise.
   win.webContents.on("did-fail-load", (_e, errorCode, errorDescription, validatedURL) => {
     console.error(
-      `[Ghostly] ❌ Renderer failed to load (${errorCode} ${errorDescription}): ${validatedURL}`,
+      `[BuddieAI] ❌ Renderer failed to load (${errorCode} ${errorDescription}): ${validatedURL}`,
     );
   });
   win.webContents.on("render-process-gone", (_e, details) => {
-    console.error("[Ghostly] ❌ Renderer process gone:", JSON.stringify(details));
+    console.error("[BuddieAI] ❌ Renderer process gone:", JSON.stringify(details));
   });
   win.webContents.on("unresponsive", () => {
-    console.error("[Ghostly] ❌ Renderer became unresponsive");
+    console.error("[BuddieAI] ❌ Renderer became unresponsive");
   });
   win.webContents.on("preload-error", (_e, preloadPath, error) => {
-    console.error(`[Ghostly] ❌ Preload script error in ${preloadPath}:`, error);
+    console.error(`[BuddieAI] ❌ Preload script error in ${preloadPath}:`, error);
   });
   if (!app.isPackaged) {
     win.webContents.on("console-message", (_e, level, message, line, sourceId) => {
@@ -381,7 +381,7 @@ function toggleWindowVisibility() {
     mainWindow.setAlwaysOnTop(true, "screen-saver");
     mainWindow.setIgnoreMouseEvents(false);
     mainWindow.focus();
-    mainWindow.webContents.send("ghostly:show");
+    mainWindow.webContents.send("BuddieAI:show");
     // The 0 -> 1 opacity jump can leave Windows' DWM holding a stale (blank)
     // composited frame for this window — same class of bug as the stealth-mode
     // repaint glitch, just triggered by the ordinary hide/show toggle instead of
@@ -400,8 +400,8 @@ function createTray(): Tray {
   const t = new Tray(icon);
   t.setToolTip("ALI — Stealth AI Assistant");
   t.setContextMenu(Menu.buildFromTemplate([
-    { label: "Show/Hide Ghostly", click: toggleWindowVisibility },
-    { label: "Capture Screen", click: () => mainWindow?.webContents.send("ghostly:screenshot") },
+    { label: "Show/Hide BuddieAI", click: toggleWindowVisibility },
+    { label: "Capture Screen", click: () => mainWindow?.webContents.send("BuddieAI:screenshot") },
     { type: "separator" },
     { label: "Quit ALI", click: () => app.quit() },
   ]));
@@ -415,7 +415,7 @@ if (!gotTheLock) {
   app.quit();
 } else {
   app.on("second-instance", (_event, commandLine) => {
-    const url = commandLine.find((arg) => arg.startsWith("ghostly://"));
+    const url = commandLine.find((arg) => arg.startsWith("BuddieAI://"));
     if (url) handleDeepLink(url);
     else if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore();
@@ -427,9 +427,9 @@ if (!gotTheLock) {
   app.whenReady().then(() => {
     // Register deep link protocol
     if (process.defaultApp && process.argv.length >= 2) {
-      app.setAsDefaultProtocolClient("ghostly", process.execPath, [path.resolve(process.argv[1])]);
+      app.setAsDefaultProtocolClient("BuddieAI", process.execPath, [path.resolve(process.argv[1])]);
     } else {
-      app.setAsDefaultProtocolClient("ghostly");
+      app.setAsDefaultProtocolClient("BuddieAI");
     }
 
     // Serve static files (images) from renderer folder in production
@@ -482,12 +482,12 @@ if (!gotTheLock) {
     setTimeout(() => warmScreenSource(), 2000);
 
     // IPC handlers
-    ipcMain.handle("ghostly:get-pending-auth-token", () => {
+    ipcMain.handle("BuddieAI:get-pending-auth-token", () => {
       const pending = pendingAuthToken;
       pendingAuthToken = null;
       return pending;
     });
-    ipcMain.on("ghostly:open-external", (_event, url: string) => {
+    ipcMain.on("BuddieAI:open-external", (_event, url: string) => {
       try {
         const parsed = new URL(url);
         if (["https:", "http:", "mailto:"].includes(parsed.protocol)) {
@@ -495,15 +495,15 @@ if (!gotTheLock) {
         }
       } catch { /* invalid URL — ignore */ }
     });
-    ipcMain.on("ghostly:enable-mouse", () => mainWindow?.setIgnoreMouseEvents(false));
-    ipcMain.on("ghostly:disable-mouse", () => mainWindow?.setIgnoreMouseEvents(false));
-    ipcMain.on("ghostly:set-opacity", (_event, value: number) => {
+    ipcMain.on("BuddieAI:enable-mouse", () => mainWindow?.setIgnoreMouseEvents(false));
+    ipcMain.on("BuddieAI:disable-mouse", () => mainWindow?.setIgnoreMouseEvents(false));
+    ipcMain.on("BuddieAI:set-opacity", (_event, value: number) => {
       if (mainWindow) mainWindow.setOpacity(Math.min(1, Math.max(0.1, value)));
     });
-    ipcMain.on("ghostly:hide", () => {
+    ipcMain.on("BuddieAI:hide", () => {
       if (mainWindow) { mainWindow.setOpacity(0); mainWindow.blur(); mainWindow.setIgnoreMouseEvents(true, { forward: false }); }
     });
-    ipcMain.on("ghostly:show", () => {
+    ipcMain.on("BuddieAI:show", () => {
       if (mainWindow) {
         mainWindow.setOpacity(1);
         mainWindow.show();
@@ -519,9 +519,9 @@ if (!gotTheLock) {
         }, 150);
       }
     });
-    ipcMain.on("ghostly:quit", () => app.quit());
-    ipcMain.on("ghostly:get-version", (event) => { event.returnValue = app.getVersion(); });
-    ipcMain.on("ghostly:move", (_event, dx: number, dy: number) => {
+    ipcMain.on("BuddieAI:quit", () => app.quit());
+    ipcMain.on("BuddieAI:get-version", (event) => { event.returnValue = app.getVersion(); });
+    ipcMain.on("BuddieAI:move", (_event, dx: number, dy: number) => {
       if (mainWindow) {
         const [x, y] = mainWindow.getPosition();
         mainWindow.setPosition(x + dx, y + dy);
@@ -536,38 +536,38 @@ if (!gotTheLock) {
 
     autoUpdater.on("checking-for-update", () => {
       console.log("[Updater] Checking for update...");
-      mainWindow?.webContents.send("ghostly:update-checking");
+      mainWindow?.webContents.send("BuddieAI:update-checking");
     });
     autoUpdater.on("update-available", (info) => {
       const safeVersion = String(info.version).replace(/[^\w.-]/g, "");
       console.log("[Updater] Update available:", safeVersion);
-      mainWindow?.webContents.send("ghostly:update-available", safeVersion);
+      mainWindow?.webContents.send("BuddieAI:update-available", safeVersion);
     });
     autoUpdater.on("update-not-available", (info) => {
       const safeVersion = String(info.version).replace(/[^\w.-]/g, "");
       console.log("[Updater] No update available. Current:", safeVersion);
-      mainWindow?.webContents.send("ghostly:update-not-available");
+      mainWindow?.webContents.send("BuddieAI:update-not-available");
     });
     autoUpdater.on("download-progress", (progress) => {
-      mainWindow?.webContents.send("ghostly:update-progress", Math.round(progress.percent));
+      mainWindow?.webContents.send("BuddieAI:update-progress", Math.round(progress.percent));
     });
     autoUpdater.on("update-downloaded", () => {
       console.log("[Updater] Update downloaded!");
-      mainWindow?.webContents.send("ghostly:update-downloaded");
+      mainWindow?.webContents.send("BuddieAI:update-downloaded");
     });
     autoUpdater.on("error", (err) => {
       const safeMsg = String(err.message).replace(/[\r\n]/g, " ").slice(0, 200);
       console.error("[Updater] Error:", safeMsg);
-      mainWindow?.webContents.send("ghostly:update-error", safeMsg);
+      mainWindow?.webContents.send("BuddieAI:update-error", safeMsg);
     });
 
-    ipcMain.on("ghostly:download-update", () => autoUpdater.downloadUpdate());
-    ipcMain.on("ghostly:install-update", () => autoUpdater.quitAndInstall());
-    ipcMain.on("ghostly:check-update", () => {
+    ipcMain.on("BuddieAI:download-update", () => autoUpdater.downloadUpdate());
+    ipcMain.on("BuddieAI:install-update", () => autoUpdater.quitAndInstall());
+    ipcMain.on("BuddieAI:check-update", () => {
       if (app.isPackaged) {
         autoUpdater.checkForUpdates();
       } else {
-        mainWindow?.webContents.send("ghostly:update-error", "Auto-update only works in packaged app.");
+        mainWindow?.webContents.send("BuddieAI:update-error", "Auto-update only works in packaged app.");
       }
     });
 
@@ -590,7 +590,7 @@ app.on("before-quit", (event) => {
 
   isQuitting = true;
 
-  console.log("[Ghostly] Shutting down...");
+  console.log("[BuddieAI] Shutting down...");
 
   unregisterHotkeys();
   authServer?.close();
@@ -599,16 +599,16 @@ app.on("before-quit", (event) => {
   stopLocalWhisper();
 
   // IMPORTANT:
-  // Unload the Ollama model that Ghostly activated.
+  // Unload the Ollama model that BuddieAI activated.
   void stopActiveOllamaModel()
     .catch((error) => {
       console.error(
-        "[Ghostly] Failed to stop Ollama model:",
+        "[BuddieAI] Failed to stop Ollama model:",
         error,
       );
     })
     .finally(() => {
-      console.log("[Ghostly] Ollama cleanup complete.");
+      console.log("[BuddieAI] Ollama cleanup complete.");
 
       // Now allow Electron to exit.
       app.exit(0);
@@ -619,6 +619,6 @@ app.on("before-quit", (event) => {
   // macOS deep link
   app.on("open-url", (event, url) => {
     event.preventDefault();
-    if (url.startsWith("ghostly://")) handleDeepLink(url);
+    if (url.startsWith("BuddieAI://")) handleDeepLink(url);
   });
 }

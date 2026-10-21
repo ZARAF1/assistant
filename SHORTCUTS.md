@@ -1,6 +1,6 @@
-# ⌨️ Arfas Ali — Keyboard Shortcuts & Hotkeys (v3.3.5)
+# ⌨️ BuddieAI — Keyboard Shortcuts & Hotkeys (v3.3.5)
 
-Run Arfas Ali 100% hands-free and stealthy during a live interview — every action below is mapped to a keyboard shortcut so you never need to touch the mouse or reveal the app on screen share.
+Run BuddieAI 100% hands-free and stealthy during a live interview — every action below is mapped to a keyboard shortcut so you never need to touch the mouse or reveal the app on screen share.
 
 | Shortcut | Action | Description |
 | :--- | :--- | :--- |

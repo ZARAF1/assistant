@@ -40,7 +40,7 @@ export class NvidiaProvider implements AIProvider {
       console.log("[NVIDIA] Calling via Electron proxy");
       console.log("[NVIDIA] Model:", model);
 
-      const result = await window.ghostly.nvidiaApiCall(apiKey, body);
+      const result = await window.BuddieAI.nvidiaApiCall(apiKey, body);
 
       console.log("[NVIDIA] Response status:", result.status);
 

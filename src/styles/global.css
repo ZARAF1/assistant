@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 /* ═══════════════════════════════════════════════════════════════════
-   Arfas Ali — Premium Design System v2.0
+   BuddieAI — Premium Design System v2.0
    Accent: Purple/Violet #8b5cf6
    ═══════════════════════════════════════════════════════════════════ */
 
@@ -236,23 +236,23 @@
     background-clip: text;
   }
 
-  /* ── ghostly-gradient (legacy compat) ── */
-  .ghostly-gradient {
+  /* ── BuddieAI-gradient (legacy compat) ── */
+  .BuddieAI-gradient {
     background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
   }
 
-  .ghostly-gradient-text {
+  .BuddieAI-gradient-text {
     background: linear-gradient(135deg, #a78bfa 0%, #8b5cf6 50%, #c4b5fd 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
-  .ghostly-border {
+  .BuddieAI-border {
     border: 1px solid rgba(139, 92, 246, 0.25);
   }
 
-  .ghostly-glow {
+  .BuddieAI-glow {
     box-shadow:
       0 0 20px rgba(139, 92, 246, 0.2),
       0 0 60px rgba(139, 92, 246, 0.08);

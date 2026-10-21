@@ -24,7 +24,7 @@ const App: React.FC = () => {
   const [appReady, setAppReady] = React.useState(false);
 
   const applyAccountPayload = async (data: any) => {
-    const savedAds = await window.ghostly.getAds().catch(() => []);
+    const savedAds = await window.BuddieAI.getAds().catch(() => []);
     const currentAds = useStore.getState().ads;
     const latestAds = Array.isArray(data.ads)
       ? data.ads
@@ -34,25 +34,25 @@ const App: React.FC = () => {
           ? savedAds
           : [];
     useStore.getState().setAds(latestAds);
-    await window.ghostly.saveAds(latestAds);
+    await window.BuddieAI.saveAds(latestAds);
   };
 
   const handleBlockedAuth = async () => {
-    await window.ghostly.logoutUser();
+    await window.BuddieAI.logoutUser();
     useStore.getState().setUser(null);
     useStore.getState().setAds([]);
     useStore.getState().setAppScreen("login");
   };
 
   useEffect(() => {
-    const offAvailable  = window.ghostly.onUpdateAvailable((v) => { setUpdateVersion(v); setUpdateState("available"); });
-    const offProgress   = window.ghostly.onUpdateProgress((p) => { setUpdatePercent(p); setUpdateState("downloading"); setShowFullScreenAnimation(true); });
-    const offDownloaded = window.ghostly.onUpdateDownloaded(() => {
+    const offAvailable  = window.BuddieAI.onUpdateAvailable((v) => { setUpdateVersion(v); setUpdateState("available"); });
+    const offProgress   = window.BuddieAI.onUpdateProgress((p) => { setUpdatePercent(p); setUpdateState("downloading"); setShowFullScreenAnimation(true); });
+    const offDownloaded = window.BuddieAI.onUpdateDownloaded(() => {
       setUpdateState("installing");
       setTimeout(() => { setUpdateState("ready"); setTimeout(() => setShowFullScreenAnimation(false), 3000); }, 2000);
     });
-    const offNotAvail = window.ghostly.onUpdateNotAvailable(() => setUpdateState("idle"));
-    const offError    = window.ghostly.onUpdateError((msg) => {
+    const offNotAvail = window.BuddieAI.onUpdateNotAvailable(() => setUpdateState("idle"));
+    const offError    = window.BuddieAI.onUpdateError((msg) => {
       const safeMsg = String(msg).replace(/[\r\n]/g, " ").slice(0, 200);
       console.error("[Update]", safeMsg);
       setUpdateError(safeMsg);
@@ -67,10 +67,10 @@ const App: React.FC = () => {
     const loadData = async () => {
       try {
         const [savedSettings, savedHistory, savedUser, savedAds] = await Promise.all([
-          window.ghostly.getSettings(),
-          window.ghostly.getHistory(),
-          window.ghostly.getUser(),
-          window.ghostly.getAds(),
+          window.BuddieAI.getSettings(),
+          window.BuddieAI.getHistory(),
+          window.BuddieAI.getUser(),
+          window.BuddieAI.getAds(),
         ]);
         if (savedSettings) {
           const merged = {
@@ -85,7 +85,7 @@ const App: React.FC = () => {
             deepgramApiKey: import.meta.env.VITE_DEEPGRAM_API_KEY || savedSettings.deepgramApiKey || "",
           };
           setSettings(merged);
-          window.ghostly.setOpacity(1);
+          window.BuddieAI.setOpacity(1);
         }
         if (savedHistory) setHistory(savedHistory);
         if (savedUser) setUser(savedUser);
@@ -97,9 +97,9 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    window.ghostly.enableMouse();
-    const t1 = setTimeout(() => window.ghostly.enableMouse(), 100);
-    const t2 = setTimeout(() => window.ghostly.enableMouse(), 400);
+    window.BuddieAI.enableMouse();
+    const t1 = setTimeout(() => window.BuddieAI.enableMouse(), 100);
+    const t2 = setTimeout(() => window.BuddieAI.enableMouse(), 400);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, [appScreen]);
 
@@ -118,7 +118,7 @@ const App: React.FC = () => {
         const data = await res.json();
         const fullUser = { ...user, idToken: token };
         setUser(fullUser);
-        await window.ghostly.saveUser(fullUser);
+        await window.BuddieAI.saveUser(fullUser);
         await applyAccountPayload(data);
         setAppScreen("home");
       } catch { /* ignore */ }
@@ -128,18 +128,18 @@ const App: React.FC = () => {
     // the website's AuthCallback page) posts the token to this app's local
     // auth server before this listener has even mounted — that message would
     // otherwise be lost and login would look permanently stuck.
-    window.ghostly.getPendingAuthToken().then((pending) => {
+    window.BuddieAI.getPendingAuthToken().then((pending) => {
       if (pending) handleAuthToken(pending);
     });
 
-    const offAuth = window.ghostly.onAuthToken(handleAuthToken);
+    const offAuth = window.BuddieAI.onAuthToken(handleAuthToken);
     return () => offAuth();
   }, []);
 
   useEffect(() => {
-    const offShow = window.ghostly.onShow(() => {
+    const offShow = window.BuddieAI.onShow(() => {
       setTimeout(() => {
-        if (useStore.getState().appScreen !== "interview") window.ghostly.enableMouse();
+        if (useStore.getState().appScreen !== "interview") window.BuddieAI.enableMouse();
       }, 60);
       const { user: currentUser } = useStore.getState();
       if (currentUser?.idToken) {
@@ -173,7 +173,6 @@ const App: React.FC = () => {
   }, [appReady, user?.idToken]);
 
   if (showSplash || !appReady) return <SplashScreen onComplete={() => setShowSplash(false)} />;
-  if (!user && appScreen !== "login") return <LoginPage />;
 
   const SETUP_STEPS = [
     { key: "interview-setup", label: "Session",  icon: "🎯" },
@@ -237,7 +236,7 @@ const App: React.FC = () => {
             pointerEvents: "auto",
             minWidth: "300px",
           }}
-          onMouseEnter={() => window.ghostly.enableMouse()}
+          onMouseEnter={() => window.BuddieAI.enableMouse()}
         >
           {/* Animated Icon Container */}
           <div className="relative shrink-0">
@@ -332,7 +331,7 @@ const App: React.FC = () => {
                 whileHover={{ scale: 1.06, boxShadow: "0 0 20px rgba(139,92,246,0.6)" }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
-                  window.ghostly.downloadUpdate();
+                  window.BuddieAI.downloadUpdate();
                   setUpdateState("downloading");
                   setShowFullScreenAnimation(true);
                 }}
@@ -351,7 +350,7 @@ const App: React.FC = () => {
               <motion.button
                 whileHover={{ scale: 1.06, boxShadow: "0 0 20px rgba(34,197,94,0.6)" }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => window.ghostly.installUpdate()}
+                onClick={() => window.BuddieAI.installUpdate()}
                 className="px-3.5 py-1.5 rounded-xl text-[11px] font-black tracking-wide text-white transition-all cursor-pointer"
                 style={{
                   background: "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)",

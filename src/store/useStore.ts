@@ -100,7 +100,7 @@ export interface Settings {
   autoScroll?: boolean;
 }
 
-interface GhostlyStore {
+interface BuddieAIStore {
   appScreen: "home" | "login" | "interview-setup" | "api-setup" | "audio-setup" | "interview";
   interviewSession: InterviewSession | null;
   savedProfile: CandidateProfile | null;
@@ -151,8 +151,8 @@ const ENV = {
   openrouter:  import.meta.env.VITE_OPENROUTER_API_KEY   || "",
 };
 
-export const useStore = create<GhostlyStore>((set) => ({
-  appScreen: "home",
+export const useStore = create<BuddieAIStore>((set) => ({
+  appScreen: "login",
   interviewSession: null,
   savedProfile: null,
   currentSolution: "",
